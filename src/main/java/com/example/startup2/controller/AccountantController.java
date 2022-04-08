@@ -30,20 +30,20 @@ public class AccountantController {
 
     @GetMapping("/salary")
     public String salary() {
-        return "salary";
+        return "/accountant/salary";
     }
 
     @PostMapping("/salary")
     public String addSalary(@RequestParam("allTime") Double allTime,
                             @RequestParam("money") Double money,
                             @RequestParam("month") String month,
-                            @RequestParam("id") Integer personnelNumber) {
-        Optional<Worker> worker = workerRepository.findById(personnelNumber);
+                            @RequestParam("id") String personnelNumber) {
+        Worker worker = workerRepository.findByPersonnelNumber(personnelNumber);
         Salary salary = Salary.builder()
                 .allTime(allTime)
                 .money(money)
                 .month(month)
-                .worker(worker.get())
+                .worker(worker)
                 .build();
         salaryRepository.save(salary);
         return "redirect:/accountant/salary";

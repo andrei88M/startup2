@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
     <title>registration</title>
@@ -16,7 +17,7 @@
             </div>
 
             <div class="modal-body p-5 pt-0">
-                <form class="" th:method="post" th:action="@{/registration}">
+                <form class="" th:method="post" th:action="@{/reg}">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control rounded-4" id="floatingInput" required placeholder="" name="name">
                         <label for="floatingInput">Name</label>
@@ -26,8 +27,12 @@
                         <label for="floatingInput2">Surname</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="number" class="form-control rounded-4" id="floatingInput3" required placeholder="" name="personnelNumber">
+                        <input type="text" class="form-control rounded-4" id="floatingInput3" required placeholder="" name="personnelNumber">
                         <label for="floatingInput3">Personnel number</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control rounded-4" id="floatingInput0" required placeholder="" name="username">
+                        <label for="floatingInput0">Login</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="password" class="form-control rounded-4" id="floatingPassword" required placeholder="" name="password">

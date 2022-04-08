@@ -1,5 +1,6 @@
 package com.example.startup2.controller;
 
+
 import com.example.startup2.model.AmountTime;
 import com.example.startup2.model.Route;
 import com.example.startup2.model.Schedule;
@@ -9,6 +10,7 @@ import com.example.startup2.repository.RouteRepository;
 import com.example.startup2.repository.ScheduleRepository;
 import com.example.startup2.repository.WorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +22,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/dispatcher")
+@PreAuthorize("hasAuthority('DISPATCHER')")
 public class DispatcherController {
 
     @Autowired
@@ -41,7 +44,7 @@ public class DispatcherController {
 
     @GetMapping("/addRoute")
     public String newRoute() {
-        return "addRoute";
+        return "/dispatcher/addRoute";
     }
 
     @PostMapping("/addRoute")
@@ -64,17 +67,16 @@ public class DispatcherController {
 
     @GetMapping("/createSchedule")
     public String newSchedule() {
-        return "createSchedule";
+        return "/dispatcher/createSchedule";
     }
 
     @PostMapping("/createSchedule")
     public String newSchedule(@RequestParam("date") String date,
-                              @RequestParam("personnelNumber") Integer persNumber,
+                              @RequestParam("personnelNumber") String persNumber,
                               @RequestParam("route") Integer route,
                               @RequestParam("type") String type,
                               @RequestParam("replacement") Integer replacement) {
-        Optional<Worker> optionalWorker = workerRepository.findById(persNumber);
-        Worker worker = optionalWorker.get();
+        Worker worker = workerRepository.findByPersonnelNumber(persNumber);
 
 
         Optional<Route> route1 = routeRepository.findRouteByNumberAndTypeNumber(route, type);
@@ -90,18 +92,18 @@ public class DispatcherController {
 
     @GetMapping("/regOfSpentTime")
     public String regOfTime() {
-        return "registrationOfSpentTime";
+        return "/dispatcher/registrationOfSpentTime";
     }
 
     @PostMapping("/regOfSpentTime")
     public String regOfSpentTime(@RequestParam("date") String date,
-                                 @RequestParam("id") Integer personnelNumber,
+                                 @RequestParam("id") String personnelNumber,
                                  @RequestParam("quantityTime") Double quantityTime) {
-        Optional<Worker> worker = workerRepository.findById(personnelNumber);
+        Worker worker = workerRepository.findByPersonnelNumber(personnelNumber);
         AmountTime amountTime = AmountTime.builder()
                 .date(String.valueOf(date))
                 .time(quantityTime)
-                .worker(worker.get())
+                .worker(worker)
                 .build();
         amountTimeRepository.save(amountTime);
         return "redirect:/dispatcher/regOfSpentTime";

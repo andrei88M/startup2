@@ -3,35 +3,37 @@ package com.example.startup2.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(indexes = {@Index(name = "pn_index", columnList = "personnel_number", unique = true)})
 @Getter
 @Setter
-@Builder
-public class Worker implements Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Worker {
+
     @Id
-    private Integer personnelNumber;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column
+    private String username;
+    private String password;
+    private boolean active;
+
     private String name;
-
-    @Column
     private String surname;
+    @Column(name = "personnel_number")
+    private String personnelNumber;
+    private String dateOfBirth;
+    private String telephone;
 
-    @Column
-    private String telephoneNumber;
-
-    @Column
-    private String role;
-
-    @OneToOne
-    @PrimaryKeyJoinColumn
-    private Account account;
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.LAZY)
+    @CollectionTable(name = "worker_role", joinColumns = @JoinColumn(name = "worker_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "worker", fetch = FetchType.EAGER)
     private Set<Salary> salarySet = new HashSet<>();

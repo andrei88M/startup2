@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>accountant</title>
@@ -8,5 +8,6 @@
 <body>
 <header th:insert="blocks/header :: headerAccountant"></header>
 
+<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
 </body>
 </html>

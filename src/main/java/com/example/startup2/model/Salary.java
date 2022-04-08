@@ -15,7 +15,7 @@ public class Salary implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column
     private double allTime;

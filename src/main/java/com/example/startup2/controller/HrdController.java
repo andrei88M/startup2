@@ -1,8 +1,10 @@
 package com.example.startup2.controller;
 
+import com.example.startup2.model.Role;
 import com.example.startup2.model.Worker;
 import com.example.startup2.repository.WorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,19 +14,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/hrd")
+@PreAuthorize("hasAuthority('HRD')")
 public class HrdController {
 
     @Autowired
     private WorkerRepository workerRepository;
 
-    @GetMapping("")
-    public String hrd(){
+    @GetMapping
+    public String hrd() {
         return "hrd";
     }
 
     @GetMapping("/addWorker")
-    public String newWorker(){
-        return "addWorker";
+    public String newWorker() {
+        return "/hrd/addWorker";
     }
 
     @PostMapping("/addWorker")
@@ -32,36 +35,31 @@ public class HrdController {
                             @RequestParam("surname") String surname,
                             @RequestParam("personnelNumber") String personnelNumber,
                             @RequestParam("telephoneNumber") String telephoneNumber,
+                            @RequestParam("dateOfBirth") String dateOfBirth,
                             @RequestParam("role") String role,
-                            Model model){
-
-        boolean aBoolean;
-        aBoolean = workerRepository.existsById(Integer.valueOf(personnelNumber));
-
-        if (aBoolean){
-            model.addAttribute("message", "not_save");
-            return "addWorker";
-        }else {
-            Worker worker = Worker.builder()
-                    .name(name)
-                    .surname(surname)
-                    .personnelNumber(Integer.valueOf(personnelNumber))
-                    .telephoneNumber(telephoneNumber)
-                    .role(role)
-                    .build();
+                            Model model) {
+        Worker worker = workerRepository.findByPersonnelNumber(personnelNumber);
+        if (worker == null) {
+            worker = new Worker();
+            worker.setName(name);
+            worker.setSurname(surname);
+            worker.setPersonnelNumber(personnelNumber);
+            worker.setTelephone(telephoneNumber);
+            worker.setDateOfBirth(dateOfBirth);
+            worker.getRoles().add(Role.valueOf(role));
             workerRepository.save(worker);
         }
+
         return "redirect:/hrd/addWorker";
     }
 
     @GetMapping("/removeWorker")
-    public String dropWorker(){
-        return "removeWorker";
+    public String dropWorker() {
+        return "/hrd/removeWorker";
     }
 
     @PostMapping("/removeWorker")
-    public String removeWorker(@RequestParam("personnelNumber") String personnelNumber){
-        workerRepository.deleteById(Integer.valueOf(personnelNumber));
+    public String removeWorker(@RequestParam("personnelNumber") String personnelNumber) {
         return "redirect:/hrd/removeWorker";
     }
 }

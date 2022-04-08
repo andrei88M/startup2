@@ -3,8 +3,6 @@ package com.example.startup2.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
@@ -12,11 +10,11 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
-public class Schedule implements Serializable {
+public class Schedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column
     private String date;

@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
@@ -16,7 +15,7 @@ public class AmountTime implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column
     private double time;
